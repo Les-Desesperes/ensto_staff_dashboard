@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import {ThemeButton} from "@/components/theme/theme-toggle";
 
 export function NavSecondary({
   items,
@@ -34,6 +35,9 @@ export function NavSecondary({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          <SidebarMenuItem>
+            <ThemeButton className="w-full justify-start" showText={true} variant={"ghost"} />
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
