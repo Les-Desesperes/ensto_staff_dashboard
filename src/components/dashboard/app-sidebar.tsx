@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { NavDocuments } from "@/components/dashboard/nav-documents"
+import {NavAdmin} from "@/components/dashboard/nav-admin"
 import { NavMain } from "@/components/dashboard/nav-main"
 import { NavSecondary } from "@/components/dashboard/nav-secondary"
 import { NavUser } from "@/components/dashboard/nav-user"
@@ -15,7 +15,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon } from "lucide-react"
+import {
+  LayoutDashboardIcon,
+  ChartBarIcon,
+  FolderIcon,
+  UsersIcon,
+  Settings2Icon,
+  CircleHelpIcon,
+  SearchIcon,
+  FileChartColumnIcon,
+  FileIcon,
+  CommandIcon,
+  Logs, Users
+} from "lucide-react"
 import {site} from "@/config/site";
 
 const data = {
@@ -27,18 +39,17 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: (
         <LayoutDashboardIcon
         />
       ),
     },
     {
-      title: "Lifecycle",
-      url: "#",
+      title: "Logs",
+      url: "/dashboard/logs",
       icon: (
-        <ListIcon
-        />
+        <Logs/>
       ),
     },
     {
@@ -64,63 +75,6 @@ const data = {
         <UsersIcon
         />
       ),
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: (
-        <CameraIcon
-        />
-      ),
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: (
-        <FileTextIcon
-        />
-      ),
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: (
-        <FileTextIcon
-        />
-      ),
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [
@@ -149,12 +103,12 @@ const data = {
       ),
     },
   ],
-  documents: [
+  administration: [
     {
-      name: "Data Library",
+      name: "Users",
       url: "#",
       icon: (
-        <DatabaseIcon
+        <Users
         />
       ),
     },
@@ -197,7 +151,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
+        <NavAdmin items={data.administration} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

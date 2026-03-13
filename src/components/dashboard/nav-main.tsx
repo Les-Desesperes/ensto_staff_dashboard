@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { CirclePlusIcon, MailIcon } from "lucide-react"
+import {useRouter} from "next/navigation";
 
 export function NavMain({
   items,
@@ -19,6 +20,8 @@ export function NavMain({
     icon?: React.ReactNode
   }[]
 }) {
+  const router = useRouter()
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -45,8 +48,8 @@ export function NavMain({
         </SidebarMenu>
         <SidebarMenu>
           {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
+            <SidebarMenuItem key={item.title} onClick={() => router.push(item.url)}>
+              <SidebarMenuButton tooltip={item.title} className={"hover:cursor-pointer"}>
                 {item.icon}
                 <span>{item.title}</span>
               </SidebarMenuButton>
