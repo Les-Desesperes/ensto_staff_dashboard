@@ -26,7 +26,7 @@ interface WsMessage {
   data?: WsPayload
 }
 
-const websocketUrl = "ws://localhost:3000"
+const websocketUrl = process.env.NEXT_PUBLIC_WS_URL
 
 function formatLogContent(log: WsMessage) {
   return JSON.stringify(log.payload ?? log.message ?? log.data ?? log, null, 2)
@@ -52,7 +52,7 @@ export default function WebSocketTest() {
   const wsRef = useRef<WebSocket | null>(null)
 
   useEffect(() => {
-    const ws = new WebSocket(websocketUrl)
+    const ws = new WebSocket(websocketUrl!)
     wsRef.current = ws
 
     ws.onopen = () => {
