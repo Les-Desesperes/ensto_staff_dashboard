@@ -106,7 +106,7 @@ const data = {
   administration: [
     {
       name: "Users",
-      url: "#",
+      url: "/dashboard/users",
       icon: (
         <Users
         />
