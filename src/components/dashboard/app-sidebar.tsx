@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import {NavAdmin} from "@/components/dashboard/nav-admin"
+import { NavAdmin } from "@/components/dashboard/nav-admin"
 import { NavMain } from "@/components/dashboard/nav-main"
 import { NavSecondary } from "@/components/dashboard/nav-secondary"
 import { NavUser } from "@/components/dashboard/nav-user"
@@ -17,146 +17,119 @@ import {
 } from "@/components/ui/sidebar"
 import {
   LayoutDashboardIcon,
-  ChartBarIcon,
-  FolderIcon,
-  UsersIcon,
   Settings2Icon,
   CircleHelpIcon,
   SearchIcon,
-  FileChartColumnIcon,
-  FileIcon,
   CommandIcon,
-  Logs, Users
+  Logs,
+  Users,
+  TruckIcon,
+  Building2Icon,
+  CarFrontIcon,
+  ContactIcon,
+  ShieldCheckIcon
 } from "lucide-react"
-import {site} from "@/config/site";
+import { site } from "@/config/site"
 
 const data = {
+  // J'ai mis des données d'exemple pour le profil admin
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "Admin ENSTO",
+    email: "admin@ensto.fr",
+    avatar: "/avatars/admin.jpg",
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Tableau de bord",
       url: "/dashboard",
-      icon: (
-        <LayoutDashboardIcon
-        />
-      ),
+      icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Logs",
+      title: "Historique & Logs",
       url: "/dashboard/logs",
-      icon: (
-        <Logs/>
-      ),
+      icon: <Logs />,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: (
-        <ChartBarIcon
-        />
-      ),
+      title: "Livreurs",
+      url: "/dashboard/livreurs",
+      icon: <TruckIcon />,
     },
     {
-      title: "Projects",
-      url: "#",
-      icon: (
-        <FolderIcon
-        />
-      ),
+      title: "Véhicules",
+      url: "/dashboard/vehicules",
+      icon: <CarFrontIcon />,
     },
     {
-      title: "Team",
-      url: "#",
-      icon: (
-        <UsersIcon
-        />
-      ),
+      title: "Entreprises",
+      url: "/dashboard/entreprises",
+      icon: <Building2Icon />,
+    },
+    {
+      title: "Visiteurs",
+      url: "/dashboard/visiteurs",
+      icon: <ContactIcon />,
     },
   ],
   navSecondary: [
     {
-      title: "Settings",
+      title: "Paramètres",
       url: "#",
-      icon: (
-        <Settings2Icon
-        />
-      ),
+      icon: <Settings2Icon />,
     },
     {
-      title: "Get Help",
+      title: "Aide",
       url: "#",
-      icon: (
-        <CircleHelpIcon
-        />
-      ),
+      icon: <CircleHelpIcon />,
     },
     {
-      title: "Search",
+      title: "Rechercher",
       url: "#",
-      icon: (
-        <SearchIcon
-        />
-      ),
+      icon: <SearchIcon />,
     },
   ],
   administration: [
     {
-      name: "Users",
+      name: "Gestion du Personnel",
       url: "/dashboard/users",
-      icon: (
-        <Users
-        />
-      ),
+      icon: <Users />,
     },
     {
-      name: "Reports",
-      url: "#",
-      icon: (
-        <FileChartColumnIcon
-        />
-      ),
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: (
-        <FileIcon
-        />
-      ),
+      name: "Sécurité & Accès",
+      url: "/dashboard/securite",
+      icon: <ShieldCheckIcon />,
     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-            >
-              <a href="#">
-                <CommandIcon className="size-5!" />
-                <span className="text-base font-semibold">{site.name}</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavAdmin items={data.administration} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-    </Sidebar>
+      <Sidebar collapsible="offcanvas" {...props}>
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                  asChild
+                  className="data-[slot=sidebar-menu-button]:p-1.5!"
+              >
+                <a href="/dashboard">
+                  <CommandIcon className="size-5!" />
+                  <span className="text-base font-semibold">{site.name || "ENSTO"}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          {/* Navigation Principale (Métier) */}
+          <NavMain items={data.navMain} />
+          {/* Navigation Administration (Personnel) */}
+          <NavAdmin items={data.administration} />
+          {/* Navigation Secondaire (Paramètres, Aide) */}
+          <NavSecondary items={data.navSecondary} className="mt-auto" />
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={data.user} />
+        </SidebarFooter>
+      </Sidebar>
   )
 }

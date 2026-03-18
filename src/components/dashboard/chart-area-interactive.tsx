@@ -138,7 +138,7 @@ const chartConfig = {
   },
   sorties: {
     label: "Sorties",
-    color: "hsl(var(--destructive))", // On peut mettre une couleur différente (ex: rouge/orange) pour les sorties
+    color: "var(--color-destructive)", // On peut mettre une couleur différente (ex: rouge/orange) pour les sorties
   },
 } satisfies ChartConfig
 
