@@ -7,28 +7,22 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {CarFrontIcon, TruckIcon} from "lucide-react"
+import { type Vehicle } from "@/lib/api/types"
+import { useVehiclesQuery } from "@/hooks/api/use-vehicles-query"
 
-// Données basées sur ton mock_data.sql (LCV = Léger, HGV = Lourd)
-const mockVehicles = [
-    { id: 1, plate: "AA-123-BB", type: "LCV", driverId: 1 },
-    { id: 2, plate: "CD-456-EF", type: "HGV", driverId: 2 },
-    { id: 3, plate: "GH-789-IJ", type: "LCV", driverId: 3 },
-    { id: 4, plate: "KL-012-MN", type: "HGV", driverId: 1 },
-]
-
-const columns: ColumnDef<typeof mockVehicles[0]>[] = [
+const columns: ColumnDef<Vehicle>[] = [
     {
-        accessorKey: "plate",
+        accessorKey: "licensePlate",
         header: "Plaque d'immatriculation",
-        cell: ({ row }) => <span className="font-mono text-base font-bold bg-muted px-2 py-1 rounded border border-border/50">{row.original.plate}</span>,
+        cell: ({ row }) => <span className="font-mono text-base font-bold bg-muted px-2 py-1 rounded border border-border/50">{row.original.licensePlate}</span>,
     },
     {
-        accessorKey: "type",
+        accessorKey: "vehicleType",
         header: "Type de Véhicule",
         cell: ({ row }) => (
             <Badge variant="secondary" className="px-2">
-                {row.original.type === "HGV" ? <TruckIcon className="mr-2 size-3" /> : <CarFrontIcon className="mr-2 size-3" />}
-                {row.original.type === "HGV" ? "Poids Lourd (HGV)" : "Véhicule Léger (LCV)"}
+                {row.original.vehicleType === "HGV" ? <TruckIcon className="mr-2 size-3" /> : <CarFrontIcon className="mr-2 size-3" />}
+                {row.original.vehicleType === "HGV" ? "Poids Lourd (HGV)" : "Véhicule Léger (LCV)"}
             </Badge>
         ),
     },
@@ -40,11 +34,25 @@ const columns: ColumnDef<typeof mockVehicles[0]>[] = [
 ]
 
 export function VehiculesTable() {
+    const { data: vehicles = [], isLoading, isError, error } = useVehiclesQuery()
+
     const table = useReactTable({
-        data: mockVehicles,
+        data: vehicles,
         columns,
         getCoreRowModel: getCoreRowModel(),
     })
+
+    if (isLoading) {
+        return <div className="rounded-md border bg-card p-4 text-sm text-muted-foreground">Chargement des véhicules...</div>
+    }
+
+    if (isError) {
+        return (
+            <div className="rounded-md border border-destructive/50 bg-card p-4 text-sm text-destructive">
+                Impossible de charger les véhicules: {error instanceof Error ? error.message : "Erreur inconnue"}
+            </div>
+        )
+    }
 
     return (
         <div className="w-full space-y-4">
@@ -58,11 +66,19 @@ export function VehiculesTable() {
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
-                                {row.getVisibleCells().map((cell) => <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>)}
+                        {table.getRowModel().rows.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                                    Aucun véhicule trouvé.
+                                </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>)}
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </div>

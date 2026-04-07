@@ -1,3 +1,4 @@
+import { CreateDriverForm } from "@/components/dashboard/livreurs/create-driver-form"
 import { LivreursTable } from "@/components/dashboard/livreurs/livreurs-table"
 
 export default function LivreursPage() {
@@ -10,6 +11,7 @@ export default function LivreursPage() {
                     Les données personnelles sont stockées de manière chiffrée.
                 </p>
             </div>
+            <CreateDriverForm />
             <LivreursTable />
         </div>
     )
