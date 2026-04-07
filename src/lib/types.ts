@@ -1,4 +1,4 @@
-export type EmployeeRoleSql = "Admin" | "Magasinie" | "Personnel"
+export type EmployeeRoleSql = "Admin" | "Magasinier" | "Personnel"
 
 // UI User shape – mirrors the `employees` SQL table (camelCase)
 export interface User {
@@ -7,7 +7,7 @@ export interface User {
   badgeUuid: string        // badge_uuid
   firstName: string        // firstName
   lastName: string         // lastName
-  role: EmployeeRoleSql    // Admin | Magasinie | Personnel
+  role: EmployeeRoleSql    // Admin | Magasinier | Personnel
   createdAt: string        // createdAt
   updatedAt: string        // updatedAt
 }
@@ -71,4 +71,3 @@ export interface HistoryLog {
   driverId: number | null
   visitorId: number | null
 }
-

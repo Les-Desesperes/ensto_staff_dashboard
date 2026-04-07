@@ -1,22 +1,22 @@
 "use client"
 
 import * as React from "react"
-import { useState } from "react"
 import Link from "next/link"
 import { UserPlus } from "lucide-react"
 import { toast } from "sonner"
 
-import { type User } from "@/lib/types"
-import { mockUsers } from "@/lib/users-data"
 import { Button } from "@/components/ui/button"
 import { UsersTable } from "@/components/dashboard/users/users-table"
+import { useEmployeesQuery } from "@/hooks/api/use-employees-query"
+import { employeeToUser } from "@/lib/mappers/user-mapper"
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>(mockUsers)
+  const { data: employees = [], isLoading, isError, error } = useEmployeesQuery()
 
-  const handleDelete = (id: string) => {
-    setUsers((prev) => prev.filter((u) => u.id !== id))
-    toast.success("Employee deleted successfully")
+  const users = React.useMemo(() => employees.map(employeeToUser), [employees])
+
+  const handleDelete = () => {
+    toast.error("DELETE /employees/:id is not available in backend API yet")
   }
 
   return (
@@ -38,10 +38,15 @@ export default function UsersPage() {
         </div>
 
         <div className="px-4 lg:px-6">
-          <UsersTable data={users} onDelete={handleDelete} />
+          {isLoading ? <div className="rounded-md border bg-card p-4 text-sm text-muted-foreground">Loading employees...</div> : null}
+          {isError ? (
+            <div className="rounded-md border border-destructive/50 bg-card p-4 text-sm text-destructive">
+              Failed to load employees: {error instanceof Error ? error.message : "Unknown error"}
+            </div>
+          ) : null}
+          {!isLoading && !isError ? <UsersTable data={users} onDelete={handleDelete} /> : null}
         </div>
       </div>
     </div>
   )
 }
-

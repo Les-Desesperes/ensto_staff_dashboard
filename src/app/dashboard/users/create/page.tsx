@@ -9,23 +9,26 @@ import { toast } from "sonner"
 import { type UserFormData } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { UserForm } from "@/components/dashboard/users/user-form"
+import { useCreateEmployeeMutation } from "@/hooks/api/use-create-employee-mutation"
 
 export default function CreateUserPage() {
   const router = useRouter()
-  const [isLoading, setIsLoading] = React.useState(false)
+  const createEmployee = useCreateEmployeeMutation()
 
   const handleSubmit = async (data: UserFormData) => {
-    setIsLoading(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      // In production: POST /api/employees with hashed password
-      console.log("Creating employee:", { ...data, password: "[REDACTED]" })
+      await createEmployee.mutateAsync({
+        username: data.username,
+        badgeUuid: data.badgeUuid,
+        passwordHash: data.password || "",
+        role: data.role,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      })
       toast.success("Employee created successfully!")
       router.push("/dashboard/users")
-    } catch {
-      toast.error("Failed to create employee")
-    } finally {
-      setIsLoading(false)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to create employee")
     }
   }
 
@@ -47,10 +50,9 @@ export default function CreateUserPage() {
         </div>
 
         <div className="px-4 lg:px-6 flex-1">
-          <UserForm onSubmit={handleSubmit} isLoading={isLoading} />
+          <UserForm onSubmit={handleSubmit} isLoading={createEmployee.isPending} />
         </div>
       </div>
     </div>
   )
 }
-

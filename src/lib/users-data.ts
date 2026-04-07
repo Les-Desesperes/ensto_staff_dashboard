@@ -42,7 +42,7 @@ export const mockEmployees: Employee[] = [
       "f21f6e6f8f2f6f95d1c46d2e1af3c0f52e89f29c45a5f6f8e4a2279a8f86b835",
     firstName: "Marie",
     lastName: "Lefevre",
-    role: "Magasinie",
+    role: "Magasinier",
     createdAt: "2023-12-01 07:50:00",
     updatedAt: "2023-12-01 07:50:00",
   },
@@ -176,4 +176,3 @@ export const mockHistoryLogs: HistoryLog[] = [
 
 // Existing Users UI consumes this transformed shape.
 export const mockUsers: User[] = mockEmployees.map(toUser)
-

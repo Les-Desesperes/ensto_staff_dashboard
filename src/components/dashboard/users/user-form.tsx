@@ -33,7 +33,7 @@ interface UserFormProps {
 
 const roleLabels: Record<EmployeeRoleSql, string> = {
   Admin: "Admin",
-  Magasinie: "Magasinié",
+  Magasinier: "Magasinier",
   Personnel: "Personnel",
 }
 
@@ -252,4 +252,3 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
     </Card>
   )
 }
-

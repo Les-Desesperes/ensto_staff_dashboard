@@ -7,15 +7,44 @@ import Link from "next/link"
 import { toast } from "sonner"
 
 import { type UserFormData } from "@/lib/types"
-import { mockUsers } from "@/lib/users-data"
 import { Button } from "@/components/ui/button"
 import { UserForm } from "@/components/dashboard/users/user-form"
+import { EmployeeService } from "@/lib/api/services/employee.service"
+import { employeeToUser } from "@/lib/mappers/user-mapper"
 
 export default function EditUserPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params)
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
-  const user = mockUsers.find((u) => u.id === id)
+  const [isPageLoading, setIsPageLoading] = React.useState(true)
+  const [user, setUser] = React.useState<ReturnType<typeof employeeToUser> | null>(null)
+
+  React.useEffect(() => {
+    let isMounted = true
+
+    EmployeeService.getEmployeeById(id)
+      .then((employee) => {
+        if (isMounted) {
+          setUser(employee ? employeeToUser(employee) : null)
+        }
+      })
+      .catch((error) => {
+        toast.error(error instanceof Error ? error.message : "Failed to load employee")
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsPageLoading(false)
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [id])
+
+  if (isPageLoading) {
+    return <div className="p-6 text-sm text-muted-foreground">Loading employee...</div>
+  }
 
   if (!user) {
     return (
@@ -35,20 +64,11 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
     )
   }
 
-  const handleSubmit = async (data: UserFormData) => {
+  const handleSubmit = async (_data: UserFormData) => {
     setIsLoading(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      // In production: PATCH /api/employees/:id
-      console.log("Updating employee:", {
-        id: user.id,
-        ...data,
-        password: data.password ? "[REDACTED]" : undefined,
-      })
-      toast.success(`${user.firstName} ${user.lastName} updated successfully!`)
+      toast.error("PATCH /employees/:id is not available in backend API yet")
       router.push("/dashboard/users")
-    } catch {
-      toast.error("Failed to update employee")
     } finally {
       setIsLoading(false)
     }
