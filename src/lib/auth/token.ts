@@ -1,15 +1,10 @@
-const AUTH_TOKEN_STORAGE_KEY = "ensto_auth_token"
+import { deleteCookie, getCookie, setCookie } from "@/lib/auth/cookie"
 
-function getCookieValue(name: string): string | null {
-  if (typeof document === "undefined") {
-    return null
-  }
+const AUTH_COOKIE_NAME = "auth_token"
+const AUTH_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7
 
-  const match = document.cookie
-    .split("; ")
-    .find((cookie) => cookie.startsWith(`${name}=`))
-
-  return match ? decodeURIComponent(match.split("=")[1] ?? "") : null
+function isSecureContext(): boolean {
+  return typeof window !== "undefined" && window.location.protocol === "https:"
 }
 
 export function getAuthToken(): string | null {
@@ -17,12 +12,7 @@ export function getAuthToken(): string | null {
     return null
   }
 
-  const fromStorage = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
-  if (fromStorage) {
-    return fromStorage
-  }
-
-  return getCookieValue("auth_token")
+  return getCookie(AUTH_COOKIE_NAME)
 }
 
 export function setAuthToken(token: string): void {
@@ -30,7 +20,12 @@ export function setAuthToken(token: string): void {
     return
   }
 
-  window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token)
+  setCookie(AUTH_COOKIE_NAME, token, {
+    path: "/",
+    sameSite: "Lax",
+    secure: isSecureContext(),
+    maxAge: AUTH_COOKIE_MAX_AGE_SECONDS,
+  })
 }
 
 export function clearAuthToken(): void {
@@ -38,6 +33,5 @@ export function clearAuthToken(): void {
     return
   }
 
-  window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+  deleteCookie(AUTH_COOKIE_NAME)
 }
-

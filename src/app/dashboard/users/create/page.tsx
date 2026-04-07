@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
@@ -20,7 +19,7 @@ export default function CreateUserPage() {
       await createEmployee.mutateAsync({
         username: data.username,
         badgeUuid: data.badgeUuid,
-        passwordHash: data.password || "",
+        password: data.password || "",
         role: data.role,
         firstName: data.firstName,
         lastName: data.lastName,

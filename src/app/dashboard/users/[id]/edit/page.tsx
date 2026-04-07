@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { isAxiosError } from "axios"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
@@ -9,41 +10,56 @@ import { toast } from "sonner"
 import { type UserFormData } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { UserForm } from "@/components/dashboard/users/user-form"
-import { EmployeeService } from "@/lib/api/services/employee.service"
 import { employeeToUser } from "@/lib/mappers/user-mapper"
+import { useEmployeeQuery } from "@/hooks/api/use-employee-query"
 
 export default function EditUserPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params)
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
-  const [isPageLoading, setIsPageLoading] = React.useState(true)
-  const [user, setUser] = React.useState<ReturnType<typeof employeeToUser> | null>(null)
+  const { data: employee, isPending, isError, error } = useEmployeeQuery(id)
 
-  React.useEffect(() => {
-    let isMounted = true
+  const user = React.useMemo(() => (employee ? employeeToUser(employee) : null), [employee])
+  const isNotFound = isAxiosError(error) && error.response?.status === 404
 
-    EmployeeService.getEmployeeById(id)
-      .then((employee) => {
-        if (isMounted) {
-          setUser(employee ? employeeToUser(employee) : null)
-        }
-      })
-      .catch((error) => {
-        toast.error(error instanceof Error ? error.message : "Failed to load employee")
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsPageLoading(false)
-        }
-      })
-
-    return () => {
-      isMounted = false
-    }
-  }, [id])
-
-  if (isPageLoading) {
+  if (isPending) {
     return <div className="p-6 text-sm text-muted-foreground">Loading employee...</div>
+  }
+
+  if (isError) {
+    if (isNotFound) {
+      return (
+        <div className="@container/main flex flex-1 flex-col gap-2">
+          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            <div className="px-4 lg:px-6 text-center">
+              <h1 className="text-3xl font-bold tracking-tight">Employee Not Found</h1>
+              <p className="text-sm text-muted-foreground mt-2">
+                No employee with ID <code className="font-mono">#{id}</code> exists.
+              </p>
+              <Link href="/dashboard/users" className="mt-4 inline-block">
+                <Button>Back to Employees</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <div className="px-4 lg:px-6 text-center">
+            <h1 className="text-3xl font-bold tracking-tight">Unable to load employee</h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+            <Link href="/dashboard/users" className="mt-4 inline-block">
+              <Button variant="outline">Back to Employees</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!user) {
@@ -64,7 +80,7 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
     )
   }
 
-  const handleSubmit = async (_data: UserFormData) => {
+  const handleSubmit = async () => {
     setIsLoading(true)
     try {
       toast.error("PATCH /employees/:id is not available in backend API yet")

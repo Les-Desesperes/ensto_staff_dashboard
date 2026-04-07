@@ -6,7 +6,7 @@ import { EmployeeService } from "@/lib/api/services/employee.service"
 const createEmployeeSchema = z.object({
   username: z.string().trim().min(1),
   badgeUuid: z.string().regex(/^[A-F0-9]{8}$/),
-  passwordHash: z.string().trim().min(1),
+  password: z.string().trim().min(1),
   role: z.enum(["Admin", "Magasinier", "Personnel"]),
   firstName: z.string().trim().min(1),
   lastName: z.string().trim().min(1),
@@ -27,4 +27,3 @@ export function useCreateEmployeeMutation() {
     },
   })
 }
-

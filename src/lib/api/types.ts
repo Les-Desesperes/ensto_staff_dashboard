@@ -44,7 +44,7 @@ export interface Employee {
 export interface CreateEmployeeBody {
   username: string
   badgeUuid: string
-  passwordHash: string
+  password: string
   role: EmployeeRole
   firstName: string
   lastName: string
@@ -111,4 +111,3 @@ export interface CreateHistoryLogBody {
   details?: string
   dateTime?: string
 }
-

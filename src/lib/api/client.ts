@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios"
 import { clearAuthToken, getAuthToken } from "@/lib/auth/token"
+import { emitAuthUnauthorized } from "@/lib/auth/auth-events"
 import { ApiResponseError } from "@/lib/api/types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1"
@@ -36,10 +37,7 @@ apiClient.interceptors.response.use(
 
     if (status === 401) {
       clearAuthToken()
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("api:unauthorized"))
-        window.location.assign("/login")
-      }
+      emitAuthUnauthorized()
     }
 
     if (status && status >= 500 && typeof window !== "undefined") {
@@ -56,4 +54,3 @@ apiClient.interceptors.response.use(
     return Promise.reject(error)
   },
 )
-
