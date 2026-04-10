@@ -15,12 +15,29 @@ import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ContactIcon, UserPlusIcon, Building2Icon, CalendarIcon } from "lucide-react"
 import { useVisitorsQuery } from "@/hooks/api/use-visitors-query"
+import { type Visitor } from "@/lib/api/types"
 
 interface VisitorRow {
     id: number
-    fullName: string
+    firstName: string
+    lastName: string
     company: string
+    employee: string
     arrivalTime: string
+}
+
+function getEmployeeDisplay(employee: Visitor["employee"]): string {
+    if (!employee) return "Non assigné"
+    if (typeof employee === "string") return employee
+
+    const firstName = typeof employee.firstName === "string" ? employee.firstName : ""
+    const lastName = typeof employee.lastName === "string" ? employee.lastName : ""
+    const fullName = `${firstName} ${lastName}`.trim()
+    if (fullName) return fullName
+    if (typeof employee.username === "string" && employee.username) return employee.username
+    if (typeof employee.employeeId === "number") return `Employé #${employee.employeeId}`
+
+    return "Non assigné"
 }
 
 const columns: ColumnDef<VisitorRow>[] = [
@@ -40,7 +57,7 @@ const columns: ColumnDef<VisitorRow>[] = [
         ),
     },
     {
-        accessorKey: "fullName",
+        accessorKey: "firstName",
         header: "Nom du Visiteur",
         cell: ({ row }) => <VisiteurViewer item={row.original} />,
     },
@@ -51,6 +68,15 @@ const columns: ColumnDef<VisitorRow>[] = [
             <Badge variant="secondary" className="px-2 font-medium">
                 <Building2Icon className="mr-2 size-3" />
                 {row.original.company}
+            </Badge>
+        ),
+    },
+    {
+        accessorKey: "employee",
+        header: "Employé visité",
+        cell: ({ row }) => (
+            <Badge variant="outline" className="px-2 font-medium">
+                {row.original.employee}
             </Badge>
         ),
     },
@@ -73,8 +99,10 @@ export function VisiteursTable() {
     const { data: visitors = [], isLoading, isError, error } = useVisitorsQuery()
     const data = React.useMemo<VisitorRow[]>(() => visitors.map((visitor) => ({
         id: visitor.visitorId,
-        fullName: visitor.fullName,
+        firstName: visitor.firstName,
+        lastName: visitor.lastName,
         company: visitor.company,
+        employee: getEmployeeDisplay(visitor.employee),
         arrivalTime: visitor.arrivalTime,
     })), [visitors])
 
@@ -140,7 +168,7 @@ function VisiteurViewer({ item }: { item: VisitorRow }) {
         <Drawer direction="right">
             <DrawerTrigger asChild>
                 <Button variant="link" className="px-0 font-medium text-primary">
-                    {item.fullName}
+                    {item.firstName} {item.lastName}
                 </Button>
             </DrawerTrigger>
             <DrawerContent className="w-screen max-w-sm">
@@ -150,15 +178,23 @@ function VisiteurViewer({ item }: { item: VisitorRow }) {
                 </DrawerHeader>
                 <div className="p-4 space-y-4">
                     <div className="space-y-2">
-                        <Label>Nom complet</Label>
-                        <Input value={item.fullName} disabled />
+                        <Label>Prénom</Label>
+                        <Input value={item.firstName} disabled />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Nom</Label>
+                        <Input value={item.lastName} disabled />
                     </div>
                     <div className="space-y-2">
                         <Label>Société</Label>
                         <Input value={item.company} readOnly />
                     </div>
                     <div className="space-y-2">
-                        <Label>Date et Heure d'arrivée</Label>
+                        <Label>Employé visité</Label>
+                        <Input value={item.employee} readOnly />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Date et Heure d&apos;arrivée</Label>
                         <Input value={new Date(item.arrivalTime).toLocaleString("fr-FR")} readOnly />
                     </div>
                 </div>

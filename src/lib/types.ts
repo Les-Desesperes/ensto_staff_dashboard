@@ -54,8 +54,10 @@ export interface Vehicle {
 
 export interface Visitor {
   visitorId: number
-  fullName: string
+  firstName: string
+  lastName: string
   company: string
+  employee: string | number | null
   arrivalTime: string
 }
 

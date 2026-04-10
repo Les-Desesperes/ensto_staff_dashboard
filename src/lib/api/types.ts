@@ -91,14 +91,25 @@ export interface StoreTempPlateBody {
 
 export interface Visitor {
   visitorId: number
-  fullName: string
+  firstName: string
+  lastName: string
   company: string
+  employee: string | VisitorEmployeeRef | null
   arrivalTime: string
 }
 
+export interface VisitorEmployeeRef {
+  employeeId?: number
+  firstName?: string
+  lastName?: string
+  username?: string
+}
+
 export interface CreateVisitorBody {
-  fullName: string
+  firstName: string
+  lastName: string
   company: string
+  employee: number | string
   arrivalTime: string
 }
 
