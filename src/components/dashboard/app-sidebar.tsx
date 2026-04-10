@@ -27,17 +27,13 @@ import {
   Building2Icon,
   CarFrontIcon,
   ContactIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
 } from "lucide-react"
+
+import { useAuth } from "@/components/providers/auth-provider"
 import { site } from "@/config/site"
 
 const data = {
-  // J'ai mis des données d'exemple pour le profil admin
-  user: {
-    name: "Admin ENSTO",
-    email: "admin@ensto.fr",
-    avatar: "/avatars/admin.jpg",
-  },
   navMain: [
     {
       title: "Tableau de bord",
@@ -102,34 +98,41 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, isAuthenticated } = useAuth()
+
+  const profile = {
+    name: user?.username ?? "Guest",
+    email: isAuthenticated ? `${user?.role ?? "Personnel"}` : "Not authenticated",
+    avatar: "/avatars/admin.jpg",
+  }
+
+  const adminItems = user?.role === "Admin" ? data.administration : []
+
   return (
-      <Sidebar collapsible="offcanvas" {...props}>
-        <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                  asChild
-                  className="data-[slot=sidebar-menu-button]:p-1.5!"
-              >
-                <a href="/dashboard">
-                  <CommandIcon className="size-5!" />
-                  <span className="text-base font-semibold">{site.name || "ENSTO"}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
-        <SidebarContent>
-          {/* Navigation Principale (Métier) */}
-          <NavMain items={data.navMain} />
-          {/* Navigation Administration (Personnel) */}
-          <NavAdmin items={data.administration} />
-          {/* Navigation Secondaire (Paramètres, Aide) */}
-          <NavSecondary items={data.navSecondary} className="mt-auto" />
-        </SidebarContent>
-        <SidebarFooter>
-          <NavUser user={data.user} />
-        </SidebarFooter>
-      </Sidebar>
+    <Sidebar collapsible="offcanvas" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
+            >
+              <a href="/dashboard">
+                <CommandIcon className="size-5!" />
+                <span className="text-base font-semibold">{site.name || "ENSTO"}</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={data.navMain} />
+        {adminItems.length > 0 ? <NavAdmin items={adminItems} /> : null}
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={profile} />
+      </SidebarFooter>
+    </Sidebar>
   )
 }

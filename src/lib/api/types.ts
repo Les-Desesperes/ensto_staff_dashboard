@@ -50,6 +50,15 @@ export interface CreateEmployeeBody {
   lastName: string
 }
 
+export interface UpdateEmployeeBody {
+  username?: string
+  badgeUuid?: string
+  passwordHash?: string
+  role?: EmployeeRole
+  firstName?: string
+  lastName?: string
+}
+
 export interface DeliveryDriver {
   driverId: number
   encryptedLastName: string

@@ -157,6 +157,7 @@ curl http://localhost:3000/api/v1/vehicle/temp-plate
 | GET | `/api/v1/employees/` | Public (target: Bearer) | - | - | - | Same payload as `/employee/` | `500` | Alias mount to the same `EmployeeRoute` |
 | GET | `/api/v1/employees/rfid/:id` | Public (target: Bearer) | `EmployeeByRfidParams` | - | - | Same payload as `/employee/rfid/:id` | `400`, `404`, `500` | Alias mount to the same `EmployeeRoute` |
 | POST | `/api/v1/employees/` | Public (target: Bearer + `Admin`) | - | - | `CreateEmployeeBody` | Same payload as `/employee/` | `400`, `401`, `500` | Alias mount to the same `EmployeeRoute` |
+| PATCH | `/api/v1/employees/:id` | Public (target: Bearer + `Admin`) | `id` | - | `{ username?, badgeUuid?, passwordHash?, role?, firstName?, lastName? }` | `200 { success: true, message: "Employee updated successfully", data: Employee }` | `400`, `401`, `404`, `500` | `EmployeeController.updateEmployee()` -> `EmployeeService.updateEmployee()` -> `Employee.update()` |
 
 #### Example
 
@@ -174,6 +175,14 @@ curl -X POST http://localhost:3000/api/v1/employee/ \
     "role": "Admin",
     "firstName": "Alice",
     "lastName": "Martin"
+  }'
+
+curl -X PATCH http://localhost:3000/api/v1/employees/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Alicia",
+    "lastName": "Martin",
+    "role": "Admin"
   }'
 ```
 
@@ -284,4 +293,3 @@ curl -X POST http://localhost:3000/api/v1/history-log/ \
 pnpm add zod
 pnpm add -D @asteasolutions/zod-to-openapi swagger-ui-express
 ```
-

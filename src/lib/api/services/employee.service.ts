@@ -3,6 +3,7 @@ import {
   type ApiResponse,
   type CreateEmployeeBody,
   type Employee,
+  type UpdateEmployeeBody,
   unwrapApiResponse,
 } from "@/lib/api/types"
 
@@ -20,6 +21,11 @@ export const EmployeeService = {
 
   async createEmployee(payload: CreateEmployeeBody): Promise<Employee> {
     const response = await apiClient.post<ApiResponse<Employee>>("/employees/", payload)
+    return unwrapApiResponse(response.data)
+  },
+
+  async updateEmployee(id: string, payload: UpdateEmployeeBody): Promise<Employee> {
+    const response = await apiClient.patch<ApiResponse<Employee>>(`/employees/${id}`, payload)
     return unwrapApiResponse(response.data)
   },
 }

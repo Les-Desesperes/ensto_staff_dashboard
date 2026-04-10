@@ -12,12 +12,13 @@ import { Button } from "@/components/ui/button"
 import { UserForm } from "@/components/dashboard/users/user-form"
 import { employeeToUser } from "@/lib/mappers/user-mapper"
 import { useEmployeeQuery } from "@/hooks/api/use-employee-query"
+import { useUpdateEmployeeMutation } from "@/hooks/api/use-update-employee-mutation"
 
 export default function EditUserPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params)
   const router = useRouter()
-  const [isLoading, setIsLoading] = React.useState(false)
   const { data: employee, isPending, isError, error } = useEmployeeQuery(id)
+  const updateEmployee = useUpdateEmployeeMutation(id)
 
   const user = React.useMemo(() => (employee ? employeeToUser(employee) : null), [employee])
   const isNotFound = isAxiosError(error) && error.response?.status === 404
@@ -80,13 +81,21 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
     )
   }
 
-  const handleSubmit = async () => {
-    setIsLoading(true)
+  const handleSubmit = async (formData: UserFormData) => {
     try {
-      toast.error("PATCH /employees/:id is not available in backend API yet")
+      await updateEmployee.mutateAsync({
+        username: formData.username,
+        badgeUuid: formData.badgeUuid,
+        role: formData.role,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        passwordHash: formData.password?.trim() ? formData.password.trim() : undefined,
+      })
+
+      toast.success("Employee updated successfully")
       router.push("/dashboard/users")
-    } finally {
-      setIsLoading(false)
+    } catch (submitError) {
+      toast.error(submitError instanceof Error ? submitError.message : "Failed to update employee")
     }
   }
 
@@ -111,7 +120,7 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
           <UserForm
             initialData={user}
             onSubmit={handleSubmit}
-            isLoading={isLoading}
+            isLoading={updateEmployee.isPending}
           />
         </div>
       </div>
