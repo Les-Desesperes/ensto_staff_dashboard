@@ -1,8 +1,6 @@
-import Image from "next/image";
-import WebSocketTest from "@/components/webseocket-test";
+import {redirect} from "next/navigation";
 
-export default function Home() {
-  return (
-    <WebSocketTest/>
-  );
+export default function HomePage() {
+    redirect("/login");
+    return <></>
 }
