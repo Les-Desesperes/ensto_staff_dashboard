@@ -13,5 +13,11 @@ export const CompanyService = {
     const response = await apiClient.get<ApiResponse<Company[]>>("/company/")
     return unwrapApiResponse(response.data)
   },
+
+  async createCompany(payload: { name: string }): Promise<Company> {
+    const response = await apiClient.post<ApiResponse<Company>>("/company/", payload)
+    return unwrapApiResponse(response.data)
+  },
 }
+
 

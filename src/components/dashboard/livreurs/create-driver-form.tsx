@@ -32,27 +32,27 @@ export function CreateDriverForm() {
       }
 
       await createDriver.mutateAsync(payload)
-      toast.success("Driver created successfully")
+      toast.success("Chauffeur enregistré avec succès !")
       setForm(initialState)
     } catch (error) {
       if (error instanceof ZodError) {
-        toast.error(error.issues[0]?.message || "Validation error")
+        toast.error(error.issues[0]?.message || "Erreur de validation")
         return
       }
 
-      toast.error(error instanceof Error ? error.message : "Unable to create driver")
+      toast.error(error instanceof Error ? error.message : "Impossible d'enregistrer le chauffeur")
     }
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Driver (API mutation example)</CardTitle>
+        <CardTitle>Enregistrer un nouveau chauffeur</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="driver-first-name">First name</Label>
+            <Label htmlFor="driver-first-name">Prénom</Label>
             <Input
               id="driver-first-name"
               value={form.firstName}
@@ -62,7 +62,7 @@ export function CreateDriverForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="driver-last-name">Last name</Label>
+            <Label htmlFor="driver-last-name">Nom</Label>
             <Input
               id="driver-last-name"
               value={form.lastName}
@@ -72,18 +72,18 @@ export function CreateDriverForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="driver-company-id">Company ID</Label>
+            <Label htmlFor="driver-company-id">ID de l'entreprise</Label>
             <Input
               id="driver-company-id"
               value={form.companyId}
               onChange={(event) => setForm((prev) => ({ ...prev, companyId: event.target.value }))}
-              placeholder="1"
+              placeholder="Ex: 1"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="driver-signature-date">PPE signature date (ISO)</Label>
+            <Label htmlFor="driver-signature-date">Date de signature EPI (ISO)</Label>
             <Input
               id="driver-signature-date"
               type="datetime-local"
@@ -105,12 +105,12 @@ export function CreateDriverForm() {
               checked={form.ppeCharterValid}
               onCheckedChange={(checked) => setForm((prev) => ({ ...prev, ppeCharterValid: checked }))}
             />
-            <Label htmlFor="driver-ppe-valid">PPE charter valid</Label>
+            <Label htmlFor="driver-ppe-valid">Charte de sécurité (EPI) validée</Label>
           </div>
 
           <div className="md:col-span-2">
             <Button type="submit" disabled={createDriver.isPending}>
-              {createDriver.isPending ? "Creating..." : "Create Driver"}
+              {createDriver.isPending ? "Création..." : "Enregistrer le chauffeur"}
             </Button>
           </div>
         </form>
@@ -118,4 +118,5 @@ export function CreateDriverForm() {
     </Card>
   )
 }
+
 

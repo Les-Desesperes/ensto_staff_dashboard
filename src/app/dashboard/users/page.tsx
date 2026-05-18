@@ -16,7 +16,7 @@ export default function UsersPage() {
   const users = React.useMemo(() => employees.map(employeeToUser), [employees])
 
   const handleDelete = () => {
-    toast.error("DELETE /employees/:id is not available in backend API yet")
+    toast.error("La suppression d'un employé n'est pas encore supportée par le backend")
   }
 
   return (
@@ -24,24 +24,24 @@ export default function UsersPage() {
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
         <div className="flex items-center justify-between px-4 lg:px-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Employees</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Employés</h1>
             <p className="text-sm text-muted-foreground">
-              Manage staff accounts, roles, and badge access
+              Gérer les comptes du personnel, les rôles et les accès par badge
             </p>
           </div>
           <Link href="/dashboard/users/create">
             <Button className="gap-2">
               <UserPlus className="h-4 w-4" />
-              Add Employee
+              Ajouter un employé
             </Button>
           </Link>
         </div>
 
         <div className="px-4 lg:px-6">
-          {isLoading ? <div className="rounded-md border bg-card p-4 text-sm text-muted-foreground">Loading employees...</div> : null}
+          {isLoading ? <div className="rounded-md border bg-card p-4 text-sm text-muted-foreground">Chargement des employés...</div> : null}
           {isError ? (
             <div className="rounded-md border border-destructive/50 bg-card p-4 text-sm text-destructive">
-              Failed to load employees: {error instanceof Error ? error.message : "Unknown error"}
+              Impossible de charger les employés : {error instanceof Error ? error.message : "Erreur inconnue"}
             </div>
           ) : null}
           {!isLoading && !isError ? <UsersTable data={users} onDelete={handleDelete} /> : null}
@@ -50,3 +50,4 @@ export default function UsersPage() {
     </div>
   )
 }
+

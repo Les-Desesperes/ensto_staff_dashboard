@@ -88,7 +88,7 @@ const columns: ColumnDef<VisitorRow>[] = [
             return (
                 <span className="text-sm flex items-center gap-2 text-muted-foreground">
           <CalendarIcon className="size-4" />
-                    {date.toLocaleDateString("fr-FR")} a {date.toLocaleTimeString("fr-FR", {hour: "2-digit", minute:"2-digit"})}
+                    {date.toLocaleDateString("fr-FR")} à {date.toLocaleTimeString("fr-FR", {hour: "2-digit", minute:"2-digit"})}
         </span>
             )
         },

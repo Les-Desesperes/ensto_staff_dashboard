@@ -13,8 +13,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 const loginSchema = z.object({
-  username: z.string().trim().min(1, "Username is required"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  username: z.string().trim().min(1, "L'identifiant est requis"),
+  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
 })
 
 type LoginFormValues = z.infer<typeof loginSchema>
@@ -50,7 +50,7 @@ export function LoginForm({
     try {
       await login(parsed.data)
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : "Unable to sign in")
+      setSubmitError(error instanceof Error ? error.message : "Impossible de se connecter")
     }
   }
 
@@ -61,12 +61,12 @@ export function LoginForm({
           <div className="flex size-8 items-center justify-center rounded-md">
             <GalleryVerticalEndIcon className="size-6" />
           </div>
-          <h1 className="text-xl font-bold">Welcome to {site.name}</h1>
-          <p className="text-sm text-muted-foreground">Use your employee credentials to sign in.</p>
+          <h1 className="text-xl font-bold">Bienvenue sur {site.name}</h1>
+          <p className="text-sm text-muted-foreground">Utilisez vos identifiants de personnel pour vous connecter.</p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="username">Identifiant</Label>
           <Input
             id="username"
             autoComplete="username"
@@ -78,7 +78,7 @@ export function LoginForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Mot de passe</Label>
           <Input
             id="password"
             type="password"
@@ -94,9 +94,10 @@ export function LoginForm({
 
         <Button type="submit" className="w-full" disabled={form.formState.isSubmitting || isBootstrapping}>
           {form.formState.isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-          {form.formState.isSubmitting ? "Signing in..." : "Login"}
+          {form.formState.isSubmitting ? "Connexion..." : "Se connecter"}
         </Button>
       </form>
     </div>
   )
 }
+

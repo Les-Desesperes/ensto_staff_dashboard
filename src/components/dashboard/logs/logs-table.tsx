@@ -16,6 +16,13 @@ import { useHistoryLogsQuery } from "@/hooks/api/use-history-logs-query"
 
 const actions = ["all", "Entry", "Exit", "Refusal"] as const
 
+const actionLabels: Record<(typeof actions)[number], string> = {
+  all: "Tous",
+  Entry: "Entrée",
+  Exit: "Sortie",
+  Refusal: "Refus",
+}
+
 type ActionFilter = (typeof actions)[number]
 
 export function InteractiveLogsTable() {
@@ -48,14 +55,14 @@ export function InteractiveLogsTable() {
     <div className="space-y-4 rounded-xl border bg-card p-4">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h3 className="font-semibold">Journaux d&apos;acces</h3>
+          <h3 className="font-semibold">Journaux d&apos;accès</h3>
           <p className="text-sm text-muted-foreground">
-            {filtered.length} evenement(s) trouves sur {logs.length}
+            {filtered.length} événement(s) trouvés sur {logs.length}
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
           <Input
-            placeholder="Rechercher details, employe, livreur..."
+            placeholder="Rechercher détails, employé, livreur..."
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             className="w-full sm:w-64"
@@ -68,7 +75,7 @@ export function InteractiveLogsTable() {
                 size="sm"
                 onClick={() => setActionFilter(action)}
               >
-                {action}
+                {actionLabels[action]}
               </Button>
             ))}
           </div>
@@ -80,17 +87,17 @@ export function InteractiveLogsTable() {
           <TableRow>
             <TableHead>Date</TableHead>
             <TableHead>Action</TableHead>
-            <TableHead>Details</TableHead>
-            <TableHead>Employee</TableHead>
-            <TableHead>Driver</TableHead>
-            <TableHead>Visitor</TableHead>
+            <TableHead>Détails</TableHead>
+            <TableHead>Employé</TableHead>
+            <TableHead>Livreur</TableHead>
+            <TableHead>Visiteur</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filtered.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                Aucun log trouve.
+                Aucun log trouvé.
               </TableCell>
             </TableRow>
           ) : (
@@ -98,7 +105,7 @@ export function InteractiveLogsTable() {
               <TableRow key={log.logId}>
                 <TableCell>{new Date(log.dateTime).toLocaleString("fr-FR")}</TableCell>
                 <TableCell>
-                  <Badge variant="outline">{log.actionType}</Badge>
+                  <Badge variant="outline">{actionLabels[log.actionType as keyof typeof actionLabels] || log.actionType}</Badge>
                 </TableCell>
                 <TableCell>{log.details || "-"}</TableCell>
                 <TableCell>{log.employeeId ?? "-"}</TableCell>

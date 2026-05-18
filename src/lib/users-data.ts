@@ -103,20 +103,26 @@ export const mockVehicles: Vehicle[] = [
 export const mockVisitors: Visitor[] = [
   {
     visitorId: 1,
-    fullName: "Sophie Martin",
+    firstName: "Sophie",
+    lastName: "Martin",
     company: "Tech Solutions",
+    employee: null,
     arrivalTime: "2023-12-01 10:15:00",
   },
   {
     visitorId: 2,
-    fullName: "Lucas Bernard",
+    firstName: "Lucas",
+    lastName: "Bernard",
     company: "Maintenance Corp",
+    employee: null,
     arrivalTime: "2023-12-01 14:00:00",
   },
   {
     visitorId: 3,
-    fullName: "Emma Petit",
+    firstName: "Emma",
+    lastName: "Petit",
     company: "Audit Partners",
+    employee: null,
     arrivalTime: "2023-12-02 09:00:00",
   },
 ]

@@ -24,7 +24,7 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
   const isNotFound = isAxiosError(error) && error.response?.status === 404
 
   if (isPending) {
-    return <div className="p-6 text-sm text-muted-foreground">Loading employee...</div>
+    return <div className="p-6 text-sm text-muted-foreground">Chargement de l'employé...</div>
   }
 
   if (isError) {
@@ -33,12 +33,12 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
             <div className="px-4 lg:px-6 text-center">
-              <h1 className="text-3xl font-bold tracking-tight">Employee Not Found</h1>
+              <h1 className="text-3xl font-bold tracking-tight">Employé non trouvé</h1>
               <p className="text-sm text-muted-foreground mt-2">
-                No employee with ID <code className="font-mono">#{id}</code> exists.
+                Aucun employé avec l'identifiant <code className="font-mono">#{id}</code> n'existe.
               </p>
               <Link href="/dashboard/users" className="mt-4 inline-block">
-                <Button>Back to Employees</Button>
+                <Button>Retour aux employés</Button>
               </Link>
             </div>
           </div>
@@ -50,12 +50,12 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 lg:px-6 text-center">
-            <h1 className="text-3xl font-bold tracking-tight">Unable to load employee</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Impossible de charger l'employé</h1>
             <p className="text-sm text-muted-foreground mt-2">
-              {error instanceof Error ? error.message : "Unknown error"}
+              {error instanceof Error ? error.message : "Erreur inconnue"}
             </p>
             <Link href="/dashboard/users" className="mt-4 inline-block">
-              <Button variant="outline">Back to Employees</Button>
+              <Button variant="outline">Retour aux employés</Button>
             </Link>
           </div>
         </div>
@@ -68,12 +68,12 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 lg:px-6 text-center">
-            <h1 className="text-3xl font-bold tracking-tight">Employee Not Found</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Employé non trouvé</h1>
             <p className="text-sm text-muted-foreground mt-2">
-              No employee with ID <code className="font-mono">#{id}</code> exists.
+              Aucun employé avec l'identifiant <code className="font-mono">#{id}</code> n'existe.
             </p>
             <Link href="/dashboard/users" className="mt-4 inline-block">
-              <Button>Back to Employees</Button>
+              <Button>Retour aux employés</Button>
             </Link>
           </div>
         </div>
@@ -92,10 +92,10 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
         passwordHash: formData.password?.trim() ? formData.password.trim() : undefined,
       })
 
-      toast.success("Employee updated successfully")
+      toast.success("Employé mis à jour avec succès !")
       router.push("/dashboard/users")
     } catch (submitError) {
-      toast.error(submitError instanceof Error ? submitError.message : "Failed to update employee")
+      toast.error(submitError instanceof Error ? submitError.message : "Échec de la mise à jour de l'employé")
     }
   }
 
@@ -109,9 +109,9 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Employee</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Modifier l'employé</h1>
             <p className="text-sm text-muted-foreground">
-              Update {user.firstName} {user.lastName}&apos;s account
+              Mettre à jour le compte de {user.firstName} {user.lastName}
             </p>
           </div>
         </div>
@@ -127,3 +127,4 @@ export default function EditUserPage({ params }: { params: Promise<{ id: string 
     </div>
   )
 }
+

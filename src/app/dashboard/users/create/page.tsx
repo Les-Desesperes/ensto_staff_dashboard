@@ -24,10 +24,10 @@ export default function CreateUserPage() {
         firstName: data.firstName,
         lastName: data.lastName,
       })
-      toast.success("Employee created successfully!")
+      toast.success("Employé créé avec succès !")
       router.push("/dashboard/users")
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to create employee")
+      toast.error(error instanceof Error ? error.message : "Échec de la création de l'employé")
     }
   }
 
@@ -41,9 +41,9 @@ export default function CreateUserPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create Employee</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Ajouter un employé</h1>
             <p className="text-sm text-muted-foreground">
-              Register a new employee account and badge
+              Enregistrer un nouveau compte d'employé et son badge
             </p>
           </div>
         </div>
@@ -55,3 +55,4 @@ export default function CreateUserPage() {
     </div>
   )
 }
+

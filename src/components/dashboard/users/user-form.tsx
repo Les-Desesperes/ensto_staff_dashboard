@@ -55,20 +55,20 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required"
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
+    if (!formData.firstName.trim()) newErrors.firstName = "Le prénom est requis"
+    if (!formData.lastName.trim()) newErrors.lastName = "Le nom de famille est requis"
     if (!formData.username.trim()) {
-      newErrors.username = "Username is required"
+      newErrors.username = "L'identifiant est requis"
     } else if (!/^[a-z0-9_]+$/.test(formData.username)) {
-      newErrors.username = "Only lowercase letters, numbers and underscores"
+      newErrors.username = "Uniquement des lettres minuscules, des chiffres et des tirets bas (_)"
     }
     if (!formData.badgeUuid.trim()) {
-      newErrors.badgeUuid = "Badge UUID is required"
+      newErrors.badgeUuid = "L'UUID du badge est requis"
     } else if (!/^[0-9A-Fa-f]{8}$/.test(formData.badgeUuid)) {
-      newErrors.badgeUuid = "Must be exactly 8 hex characters (e.g. B053AF25)"
+      newErrors.badgeUuid = "Doit contenir exactement 8 caractères hexadécimaux (ex: B053AF25)"
     }
     if (!isEdit && !formData.password?.trim()) {
-      newErrors.password = "Password is required for new employees"
+      newErrors.password = "Le mot de passe est requis pour les nouveaux employés"
     }
 
     setErrors(newErrors)
@@ -78,7 +78,7 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateForm()) {
-      toast.error("Please fix the errors in the form")
+      toast.error("Veuillez corriger les erreurs dans le formulaire")
       return
     }
     onSubmit(formData)
@@ -94,9 +94,9 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>{isEdit ? "Edit Employee" : "Create New Employee"}</CardTitle>
+            <CardTitle>{isEdit ? "Modifier l'employé" : "Ajouter un employé"}</CardTitle>
             <CardDescription>
-              {isEdit ? "Update employee information" : "Register a new employee in the system"}
+              {isEdit ? "Mettre à jour les informations de l'employé" : "Enregistrer un nouvel employé dans le système"}
             </CardDescription>
           </div>
           {isEdit && initialData && (
@@ -112,7 +112,7 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
           {/* Name row */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">Prénom</Label>
               <Input
                 id="firstName"
                 placeholder="Jean"
@@ -125,7 +125,7 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">Nom de famille</Label>
               <Input
                 id="lastName"
                 placeholder="Dupont"
@@ -142,7 +142,7 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
           {/* Username + Badge UUID row */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">Identifiant</Label>
               <Input
                 id="username"
                 placeholder="jdupont_admin"
@@ -155,12 +155,12 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
                 <p className="text-sm text-destructive">{errors.username}</p>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Lowercase letters, numbers and underscores
+                  Lettres minuscules, chiffres et tirets bas (_)
                 </p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="badgeUuid">Badge UUID</Label>
+              <Label htmlFor="badgeUuid">UUID Badge</Label>
               <Input
                 id="badgeUuid"
                 placeholder="B053AF25"
@@ -173,14 +173,14 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
               {errors.badgeUuid ? (
                 <p className="text-sm text-destructive">{errors.badgeUuid}</p>
               ) : (
-                <p className="text-xs text-muted-foreground">8-character hex ID from the badge</p>
+                <p className="text-xs text-muted-foreground">ID hexadécimal à 8 caractères du badge</p>
               )}
             </div>
           </div>
 
           {/* Role */}
           <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role">Rôle</Label>
             <Select
               value={formData.role}
               onValueChange={(value: EmployeeRoleSql) => handleChange("role", value)}
@@ -201,16 +201,16 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
           {/* Password */}
           <div className="space-y-2">
             <Label htmlFor="password">
-              Password{" "}
+              Mot de passe{" "}
               {isEdit && (
-                <span className="text-xs text-muted-foreground font-normal">(leave blank to keep current)</span>
+                <span className="text-xs text-muted-foreground font-normal">(laisser vide pour conserver le mot de passe actuel)</span>
               )}
             </Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder={isEdit ? "••••••••" : "Enter a secure password"}
+                placeholder={isEdit ? "••••••••" : "Entrez un mot de passe sécurisé"}
                 value={formData.password ?? ""}
                 onChange={(e) => handleChange("password", e.target.value)}
                 disabled={isLoading}
@@ -241,10 +241,10 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
               onClick={() => router.back()}
               disabled={isLoading}
             >
-              Cancel
+              Annuler
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Saving…" : isEdit ? "Update Employee" : "Create Employee"}
+              {isLoading ? "Enregistrement..." : isEdit ? "Mettre à jour" : "Créer l'employé"}
             </Button>
           </div>
         </form>
@@ -252,3 +252,4 @@ export function UserForm({ initialData, onSubmit, isLoading = false }: UserFormP
     </Card>
   )
 }
+

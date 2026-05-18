@@ -101,10 +101,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, isAuthenticated } = useAuth()
 
   const profile = {
-    name: user?.username ?? "Guest",
-    email: isAuthenticated ? `${user?.role ?? "Personnel"}` : "Not authenticated",
+    name: user?.username ?? "Invité",
+    email: isAuthenticated ? (user?.role === "Admin" ? "Administrateur" : "Personnel") : "Non authentifié",
     avatar: "/avatars/admin.jpg",
   }
+
 
   const adminItems = user?.role === "Admin" ? data.administration : []
 

@@ -78,7 +78,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="h-8 px-2 -ml-2"
         >
-          Name
+          Nom
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -93,7 +93,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
     },
     {
       accessorKey: "username",
-      header: "Username",
+      header: "Identifiant",
       cell: ({ row }) => (
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
           {row.getValue("username")}
@@ -102,7 +102,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
     },
     {
       accessorKey: "badgeUuid",
-      header: "Badge UUID",
+      header: "UUID Badge",
       cell: ({ row }) => (
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono tracking-wider">
           {row.getValue("badgeUuid")}
@@ -111,7 +111,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
     },
     {
       accessorKey: "role",
-      header: "Role",
+      header: "Rôle",
       cell: ({ row }) => {
         const role = row.getValue("role") as keyof typeof roleConfig
         const config = roleConfig[role] ?? roleConfig.Personnel
@@ -135,7 +135,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="h-8 px-2 -ml-2"
         >
-          Created
+          Créé le
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -162,7 +162,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
             <Link href={`/dashboard/users/${user.id}/edit`}>
               <Button variant="outline" size="icon" className="h-8 w-8">
                 <Edit2 className="h-3.5 w-3.5" />
-                <span className="sr-only">Edit {user.firstName}</span>
+                <span className="sr-only">Modifier {user.firstName}</span>
               </Button>
             </Link>
             <Button
@@ -178,7 +178,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
               }
             >
               <Trash2 className="h-3.5 w-3.5" />
-              <span className="sr-only">Delete {user.firstName}</span>
+              <span className="sr-only">Supprimer {user.firstName}</span>
             </Button>
           </div>
         )
@@ -209,7 +209,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
     <>
       <div className="space-y-4">
         <Input
-          placeholder="Search by name, username, badge or role…"
+          placeholder="Rechercher par nom, identifiant, badge ou rôle…"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
@@ -244,7 +244,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
-                    No employees found.
+                    Aucun employé trouvé.
                   </TableCell>
                 </TableRow>
               )}
@@ -254,7 +254,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
 
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {table.getFilteredRowModel().rows.length} employee(s) found
+            {table.getFilteredRowModel().rows.length} employé(s) trouvé(s)
           </p>
           <div className="flex gap-2">
             <Button
@@ -263,7 +263,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              Previous
+              Précédent
             </Button>
             <Button
               variant="outline"
@@ -271,7 +271,7 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              Next
+              Suivant
             </Button>
           </div>
         </div>
@@ -285,20 +285,18 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Employee</AlertDialogTitle>
+            <AlertDialogTitle>Supprimer l'employé</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete{" "}
-              <span className="font-semibold">{deleteDialog.userName}</span>? This
-              action cannot be undone.
+              Êtes-vous sûr de vouloir supprimer <span className="font-semibold">{deleteDialog.userName}</span> ? Cette action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex gap-3 justify-end">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Supprimer
             </AlertDialogAction>
           </div>
         </AlertDialogContent>
@@ -306,3 +304,4 @@ export function UsersTable({ data, onDelete }: UsersTableProps) {
     </>
   )
 }
+
