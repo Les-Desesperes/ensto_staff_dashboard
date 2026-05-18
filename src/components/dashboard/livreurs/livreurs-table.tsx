@@ -15,6 +15,15 @@ import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { UserPlusIcon, ShieldCheckIcon, ShieldAlertIcon, TruckIcon } from "lucide-react"
 import { useDriversQuery } from "@/hooks/api/use-drivers-query"
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import { CreateDriverForm } from "./create-driver-form"
 
 interface DriverRow {
     id: number
@@ -70,6 +79,7 @@ const columns: ColumnDef<DriverRow>[] = [
 
 export function LivreursTable() {
     const { data: drivers = [], isLoading, isError, error } = useDriversQuery()
+    const [isCreateOpen, setIsCreateOpen] = React.useState(false)
 
     const data = React.useMemo<DriverRow[]>(() => {
         return drivers.map((driver) => ({
@@ -94,9 +104,22 @@ export function LivreursTable() {
             <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold flex items-center gap-2"><TruckIcon className="size-5 text-primary"/> Base Chauffeurs</h2>
                 <div className="flex gap-2">
-                    <Button size="sm" disabled>
-                        <UserPlusIcon className="mr-2 size-4" /> Ajouter un chauffeur
-                    </Button>
+                    <Sheet open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                        <SheetTrigger asChild>
+                            <Button size="sm">
+                                <UserPlusIcon className="mr-2 size-4" /> Ajouter un chauffeur
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent className="sm:max-w-md">
+                            <SheetHeader>
+                                <SheetTitle>Ajouter un chauffeur</SheetTitle>
+                                <SheetDescription>
+                                    Enregistrez un nouveau chauffeur dans le système.
+                                </SheetDescription>
+                            </SheetHeader>
+                            <CreateDriverForm onSuccess={() => setIsCreateOpen(false)} />
+                        </SheetContent>
+                    </Sheet>
                 </div>
             </div>
 
@@ -108,30 +131,56 @@ export function LivreursTable() {
             ) : null}
 
             {!isLoading && !isError ? (
-                <div className="rounded-md border bg-card">
-                    <Table>
-                        <TableHeader className="bg-muted/50">
-                            {table.getHeaderGroups().map((hg) => (
-                                <TableRow key={hg.id}>
-                                    {hg.headers.map((h) => <TableHead key={h.id}>{flexRender(h.column.columnDef.header, h.getContext())}</TableHead>)}
-                                </TableRow>
-                            ))}
-                        </TableHeader>
-                        <TableBody>
-                            {table.getRowModel().rows.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">Aucun chauffeur trouvé.</TableCell>
-                                </TableRow>
-                            ) : (
-                                table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id}>
-                                        {row.getVisibleCells().map((cell) => <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>)}
+                <>
+                    <div className="rounded-md border bg-card">
+                        <Table>
+                            <TableHeader className="bg-muted/50">
+                                {table.getHeaderGroups().map((hg) => (
+                                    <TableRow key={hg.id}>
+                                        {hg.headers.map((h) => <TableHead key={h.id}>{flexRender(h.column.columnDef.header, h.getContext())}</TableHead>)}
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
+                                ))}
+                            </TableHeader>
+                            <TableBody>
+                                {table.getRowModel().rows.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">Aucun chauffeur trouvé.</TableCell>
+                                    </TableRow>
+                                ) : (
+                                    table.getRowModel().rows.map((row) => (
+                                        <TableRow key={row.id}>
+                                            {row.getVisibleCells().map((cell) => <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>)}
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-4">
+                        <p className="text-sm text-muted-foreground">
+                            {table.getFilteredRowModel().rows.length} chauffeur(s) trouvé(s)
+                        </p>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => table.previousPage()}
+                                disabled={!table.getCanPreviousPage()}
+                            >
+                                Précédent
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => table.nextPage()}
+                                disabled={!table.getCanNextPage()}
+                            >
+                                Suivant
+                            </Button>
+                        </div>
+                    </div>
+                </>
             ) : null}
         </div>
     )

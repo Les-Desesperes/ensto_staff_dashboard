@@ -18,7 +18,11 @@ const initialState = {
   ppeSignatureDate: "",
 }
 
-export function CreateDriverForm() {
+interface CreateDriverFormProps {
+  onSuccess?: () => void
+}
+
+export function CreateDriverForm({ onSuccess }: CreateDriverFormProps) {
   const [form, setForm] = React.useState(initialState)
   const createDriver = useCreateDriverMutation()
 
@@ -34,6 +38,7 @@ export function CreateDriverForm() {
       await createDriver.mutateAsync(payload)
       toast.success("Chauffeur enregistré avec succès !")
       setForm(initialState)
+      onSuccess?.()
     } catch (error) {
       if (error instanceof ZodError) {
         toast.error(error.issues[0]?.message || "Erreur de validation")
@@ -45,78 +50,72 @@ export function CreateDriverForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Enregistrer un nouveau chauffeur</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="driver-first-name">Prénom</Label>
-            <Input
-              id="driver-first-name"
-              value={form.firstName}
-              onChange={(event) => setForm((prev) => ({ ...prev, firstName: event.target.value }))}
-              required
-            />
-          </div>
+    <form onSubmit={onSubmit} className="space-y-4 py-4">
+      <div className="space-y-2">
+        <Label htmlFor="driver-first-name">Prénom</Label>
+        <Input
+          id="driver-first-name"
+          value={form.firstName}
+          onChange={(event) => setForm((prev) => ({ ...prev, firstName: event.target.value }))}
+          required
+        />
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="driver-last-name">Nom</Label>
-            <Input
-              id="driver-last-name"
-              value={form.lastName}
-              onChange={(event) => setForm((prev) => ({ ...prev, lastName: event.target.value }))}
-              required
-            />
-          </div>
+      <div className="space-y-2">
+        <Label htmlFor="driver-last-name">Nom</Label>
+        <Input
+          id="driver-last-name"
+          value={form.lastName}
+          onChange={(event) => setForm((prev) => ({ ...prev, lastName: event.target.value }))}
+          required
+        />
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="driver-company-id">ID de l'entreprise</Label>
-            <Input
-              id="driver-company-id"
-              value={form.companyId}
-              onChange={(event) => setForm((prev) => ({ ...prev, companyId: event.target.value }))}
-              placeholder="Ex: 1"
-              required
-            />
-          </div>
+      <div className="space-y-2">
+        <Label htmlFor="driver-company-id">ID de l'entreprise</Label>
+        <Input
+          id="driver-company-id"
+          value={form.companyId}
+          onChange={(event) => setForm((prev) => ({ ...prev, companyId: event.target.value }))}
+          placeholder="Ex: 1"
+          required
+        />
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="driver-signature-date">Date de signature EPI (ISO)</Label>
-            <Input
-              id="driver-signature-date"
-              type="datetime-local"
-              value={form.ppeSignatureDate}
-              onChange={(event) =>
-                setForm((prev) => ({
-                  ...prev,
-                  ppeSignatureDate: event.target.value
-                    ? new Date(event.target.value).toISOString()
-                    : "",
-                }))
-              }
-            />
-          </div>
+      <div className="space-y-2">
+        <Label htmlFor="driver-signature-date">Date de signature EPI (ISO)</Label>
+        <Input
+          id="driver-signature-date"
+          type="datetime-local"
+          value={form.ppeSignatureDate}
+          onChange={(event) =>
+            setForm((prev) => ({
+              ...prev,
+              ppeSignatureDate: event.target.value
+                ? new Date(event.target.value).toISOString()
+                : "",
+            }))
+          }
+        />
+      </div>
 
-          <div className="flex items-center gap-2 md:col-span-2">
-            <Switch
-              id="driver-ppe-valid"
-              checked={form.ppeCharterValid}
-              onCheckedChange={(checked) => setForm((prev) => ({ ...prev, ppeCharterValid: checked }))}
-            />
-            <Label htmlFor="driver-ppe-valid">Charte de sécurité (EPI) validée</Label>
-          </div>
+      <div className="flex items-center gap-2 py-2">
+        <Switch
+          id="driver-ppe-valid"
+          checked={form.ppeCharterValid}
+          onCheckedChange={(checked) => setForm((prev) => ({ ...prev, ppeCharterValid: checked }))}
+        />
+        <Label htmlFor="driver-ppe-valid">Charte de sécurité (EPI) validée</Label>
+      </div>
 
-          <div className="md:col-span-2">
-            <Button type="submit" disabled={createDriver.isPending}>
-              {createDriver.isPending ? "Création..." : "Enregistrer le chauffeur"}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+      <div className="pt-2">
+        <Button type="submit" disabled={createDriver.isPending} className="w-full">
+          {createDriver.isPending ? "Création..." : "Enregistrer le chauffeur"}
+        </Button>
+      </div>
+    </form>
   )
 }
+
 
 
